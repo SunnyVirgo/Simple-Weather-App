@@ -38,6 +38,7 @@ body{
     background: transparent;
     cursor: pointer;
     margin-left: 1rem;
+    outline: 0;
 }
 .search img{
     height: 30px;

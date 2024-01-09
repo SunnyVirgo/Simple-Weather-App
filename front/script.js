@@ -3,6 +3,7 @@ const url ="https://api.openweathermap.org/data/2.5/weather?units=metric&";
 
 const search = document.querySelector('.city')
 const button = document.querySelector('.btn')
+const icon = document.querySelector('.icon')
 
 async function getWeather(lat,lon,city) {  
     if(city === ""){
@@ -10,14 +11,39 @@ async function getWeather(lat,lon,city) {
     }else{      
     var response = await fetch(url + `q=${city}` + `&appid=${apiKey}`);
     }
-    var data = await response.json();
 
-    document.querySelector('.cityName').innerHTML = data.name
-    document.querySelector('.temp').innerHTML = Math.round(data.main.temp) +`° C`
-    document.querySelector('.desc').innerHTML = data.weather[0].main
+    if(response.status===404){
+        icon.src="../assets/sad.png"
+        document.querySelector('.temp').innerHTML = "Invalid location!"
+        document.querySelector('.cityName').innerHTML = ""
+        document.querySelector('.desc').innerHTML = ""
+        document.querySelector('#humidity').innerHTML = "0.00"
+        document.querySelector('#speed').innerHTML = "0.00"
+    }else{
+        var data = await response.json();
+
+        if(data.weather[0].main === "Clouds"){
+            icon.src="../assets/cloudy.png"
+        }else if(data.weather[0].main === "Clear"){
+            icon.src="../assets/sun.png"
+        }else if(data.weather[0].main === "Fog"){
+            icon.src="../assets/fog.png"
+        }else if(data.weather[0].main === "Snow"){
+            icon.src="../assets/snow.png"
+        }else if(data.weather[0].main === "Rain"){
+            icon.src="../assets/raining.png"
+        }else if(data.weather[0].main === "Storm"){
+            icon.src="../assets/storm.png"
+        }
     
-    document.querySelector('#humidity').innerHTML = data.main.humidity + `%`
-    document.querySelector('#speed').innerHTML = Math.round(data.wind.speed) + `5 km/s`
+        document.querySelector('.cityName').innerHTML = data.name
+        document.querySelector('.temp').innerHTML = Math.round(data.main.temp) +`° C`
+        document.querySelector('.desc').innerHTML = data.weather[0].main
+        
+        document.querySelector('#humidity').innerHTML = data.main.humidity + `%`
+        document.querySelector('#speed').innerHTML = Math.round(data.wind.speed) + `5 km/s`
+    }
+   
 }
 
 button.addEventListener("click", ()=>{
